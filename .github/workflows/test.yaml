@@ -10,5 +10,7 @@ jobs:
   build-html:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      
       - name: primer workflow
         run: ls -las
