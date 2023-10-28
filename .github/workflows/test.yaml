@@ -9,7 +9,6 @@ on:
 jobs:
   build-html:
     runs-on: ubuntu-latest
-
-
-    name: primer workflow
-    run: ls -las
+    steps:
+      - name: primer workflow
+        run: ls -las
