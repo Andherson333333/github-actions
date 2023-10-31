@@ -25,7 +25,7 @@ jobs:
       - name: Build and (not) push
         uses: docker/build-push-action@v5
         with:
-          push: false
+          push: true
           tags: andherson1039/prueba-gha:${{ github.sha }}
 
 
