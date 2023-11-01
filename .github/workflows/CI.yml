@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-html:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,3 +29,13 @@ jobs:
         with:
           push: true
           tags: andherson1039/prueba-gha:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy in Docker
+        run: |
+          docker run -d -p 80:80 andherson1039/prueba-gha:${{ github.sha }}
+
