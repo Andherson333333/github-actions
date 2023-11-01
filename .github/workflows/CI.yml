@@ -9,9 +9,14 @@ on:
       - main
 
 jobs:
-  build:
+  build-html:
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Redundancy workflow
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -31,11 +36,9 @@ jobs:
           tags: andherson1039/prueba-gha:${{ github.sha }}
 
   deploy:
-    needs: build
+    needs: build-html
     runs-on: self-hosted
-
     steps:
       - name: Deploy in Docker
         run: |
           docker run -d -p 80:80 andherson1039/prueba-gha:${{ github.sha }}
-
