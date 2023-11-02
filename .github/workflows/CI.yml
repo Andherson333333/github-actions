@@ -44,12 +44,18 @@ jobs:
           sed -i "s|image: andherson1039/prueba-gha:[0-9a-zA-Z]*|image: andherson1039/prueba-gha:${{ github.sha }}|g" argocd/deployment.yaml
           cat argocd/deployment.yaml
 
-      - run: |
+      - name: Commit changes
+        run: |
           date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add argocd/deployment.yaml
           git commit -m "generated"
-          git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          access_token: ${{ github.token }}
+          branch: main
 
 
