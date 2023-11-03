@@ -31,7 +31,7 @@ jobs:
         with:
           projectBaseDir: app/
           args: >
-             -Dsonar.organization=Andherson333333
+             -Dsonar.organization=Andherson R
              -Dsonar.projectKey=test-gha
               
       - name: Login to Docker Hub
