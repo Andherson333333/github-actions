@@ -35,7 +35,7 @@ jobs:
       - name: Build and (not) push
         uses: docker/build-push-action@v5
         with:
-          push: true
+          push: false
           tags: andherson1039/prueba-gha:${{ github.sha }}
 
       - name: Update deployment.yaml
@@ -44,7 +44,7 @@ jobs:
           sed -i "s|image: andherson1039/prueba-gha:[0-9a-zA-Z]*|image: andherson1039/prueba-gha:${{ github.sha }}|g" argocd/deployment.yaml
           cat argocd/deployment.yaml
 
-      - name: Commit changes
+      - name: Commit changes and push
         run: |
           date > generated.txt
           git config user.name github-actions
@@ -53,10 +53,5 @@ jobs:
           git commit -m "generated"
           git push
 
-     # - name: Push changes
-      #  uses: ad-m/github-push-action@master
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    branch: main
 
 
