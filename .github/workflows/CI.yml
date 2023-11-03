@@ -32,9 +32,10 @@ jobs:
       - name: Build and (not) push
         uses: docker/build-push-action@v5
         with:
+          context: app/
           push: false
           tags: andherson1039/prueba-gha:${{ github.sha }}
-
+          
       - name: Update deployment.yaml
         run: |
           cat argocd/deployment.yaml
