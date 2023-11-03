@@ -51,11 +51,12 @@ jobs:
           git config user.email github-actions@github.com
           git add argocd/deployment.yaml
           git commit -m "generated"
+          git push
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+     # - name: Push changes
+      #  uses: ad-m/github-push-action@master
+      #  with:
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    branch: main
 
 
