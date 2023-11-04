@@ -1,10 +1,10 @@
-name: CI/CD docker build , SonarQube test and deployment argocd
+name: CI docker build and SonarQube test
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
+    branches:
+      - '*'
+  push:
     branches:
       - main
 
@@ -16,21 +16,41 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.0
         with:
           access_token: ${{ github.token }}
-          
-  build-html:
+
+
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - pr: true
+            main: false
+          - pr: false
+            main: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+        with:
+          fetch-depth: 0  
+
       - name: SonarCloud Scan
+        if: ${{ matrix.pr == true }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build-html:
+    name: Docker Build and Push
+    runs-on: ubuntu-latest
+    needs: sonarcloud
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          projectBaseDir: app/
-              
+          fetch-depth: 0  
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -43,7 +63,7 @@ jobs:
           context: app/
           push: false
           tags: andherson1039/prueba-gha:${{ github.sha }}
-          
+
       - name: Update deployment.yaml
         run: |
           cat argocd/deployment.yaml
@@ -55,6 +75,7 @@ jobs:
           date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
+          branches=("main" "branch1" "branch2" "branch3") 
           git add argocd/deployment.yaml
           git commit -m "generated"
           git push
