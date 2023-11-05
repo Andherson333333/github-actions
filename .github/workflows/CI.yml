@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Deshabilita clonado superficial para análisis más completo
+          fetch-depth: 0 
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
