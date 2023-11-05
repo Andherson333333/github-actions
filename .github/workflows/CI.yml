@@ -1,10 +1,10 @@
 name: CI docker build and SonarQube test
 
 on:
-  pull_request:
-    branches:
-      - '*'
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -17,25 +17,17 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-
   sonarcloud:
-    name: SonarCloud
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - pr: true
-            main: false
-          - pr: false
-            main: true
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0  # Deshabilita clonado superficial para análisis más completo
 
       - name: SonarCloud Scan
-        if: ${{ matrix.pr == true }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,15 +35,13 @@ jobs:
         with:
           projectBaseDir: app/
 
-  build-html:
-    name: Docker Build and Push
+  build-deploy:
+    name: Build 
     runs-on: ubuntu-latest
     needs: sonarcloud
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -72,15 +62,14 @@ jobs:
           sed -i "s|image: andherson1039/prueba-gha:[0-9a-zA-Z]*|image: andherson1039/prueba-gha:${{ github.sha }}|g" argocd/deployment.yaml
           cat argocd/deployment.yaml
 
-      - name: Commit changes and push
+      - name: Commit changes and push (deploy)
         run: |
           date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
-          branches=("main" "branch1" "branch2" "branch3") 
+          branches=("main" "branch1" "branch2" "branch3")
           git add argocd/deployment.yaml
           git commit -m "generated"
           git push
-
 
 
