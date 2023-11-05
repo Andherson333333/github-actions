@@ -1,3 +1,3 @@
 # github-actions
-project githu action 
+project github action 
 sonarcloud+docker+push+argocd
