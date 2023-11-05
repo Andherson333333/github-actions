@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: andherson1039/prueba-gha:562dc4072b037084e8a477e8faf62716c9837e72
+        image: andherson1039/prueba-gha:33eeb972bead0e68971ff3d2657b6a52458f013c
         ports:
         - containerPort: 80
