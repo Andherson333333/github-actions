@@ -1,4 +1,4 @@
-name: CI docker build and SonarQube test
+name: CI/CD sonarcloud+docker+push+argocd
 
 on:
   push:
