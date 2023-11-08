@@ -67,7 +67,6 @@ jobs:
           date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
-          branches=("main" "branch1" "branch2" "branch3")
           git add argocd/deployment.yaml
           git commit -m "generated"
           git push
